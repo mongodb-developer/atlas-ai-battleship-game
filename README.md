@@ -38,7 +38,7 @@ pip install -r requirements.txt
 
 To start the game, run:
 ```
-streamlit run battleship_game.py
+streamlit run battleship-game.py
 ```
 
 ## How to Play
