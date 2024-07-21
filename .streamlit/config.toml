@@ -1,0 +1,6 @@
+[theme]
+secondaryBackgroundColor = "#bd8a1c"  # A softer yellow for ships
+secondaryColor = "#96ebfa"  # A nice blue for water
+backgroundColor = "#FFFFFF"
+textColor = "#262730"
+font = "sans serif"
