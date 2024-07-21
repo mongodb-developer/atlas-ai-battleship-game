@@ -16,7 +16,7 @@ This is a Streamlit-based implementation of the classic Battleship game, featuri
 - Streamlit
 - pymongo
 - boto3
-- AWS account with Bedrock access
+- AWS account with Bedrock Claude 3.5 access on `US-EAST-1`.
 - MongoDB Atlas account with your IP in the accesslist permission.
 
 ## Installation
