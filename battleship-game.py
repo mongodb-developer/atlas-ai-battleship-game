@@ -19,16 +19,28 @@ SHIPS = [
     {"name": "Destroyer", "size": 2, "symbol": ":speedboat:"}
 ]
 
+ # Initialize difficulty in session state if not present
+if 'difficulty' not in st.session_state:
+    st.session_state.difficulty = "Beginner"
+
+# Add difficulty selector
+st.session_state.difficulty = st.selectbox(
+    "Select Difficulty",
+    ["Beginner", "Expert"],
+    index=0 if st.session_state.difficulty == "Beginner" else 1
+)
+
 # MongoDB Atlas Connection
 client = MongoClient(os.environ.get('MONGODB_ATLAS_URI'))
 db = client['battleship']
 games = db['games']
 
+region = 'us-east-1' if st.session_state.difficulty == "Begginer" else 'us-west-2'
 # AWS Bedrock Client Setup
 bedrock_runtime = boto3.client('bedrock-runtime',
                                aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
                                aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'),
-                               region_name="us-east-1")
+                               region_name=region)
 
 def get_bedrock_claude_move(board, openent_moves=None):
     """
@@ -48,9 +60,11 @@ def get_bedrock_claude_move(board, openent_moves=None):
         }]
     })
 
+    model_id = "anthropic.claude-3-5-sonnet-20241022-v2:0" if st.session_state.difficulty == "Expert" else "anthropic.claude-3-5-sonnet-20240620-v1:0"
+
     response = bedrock_runtime.invoke_model(
         body=claude_body,
-        modelId="anthropic.claude-3-5-sonnet-20240620-v1:0",
+        modelId=model_id,
         accept="application/json",
         contentType="application/json",
     )
@@ -213,7 +227,10 @@ def opponent_turn():
 
 def main():
     """Main function to run the Battleship game."""
-    st.title('Battleship Game')
+    st.title('Battleship Game vs Bedrock 🏴‍☠️')
+    
+   
+    
     initialize_game()
     if st.session_state.game_state['game_over']:
         st.subheader('Game Over! You Lost!' if st.session_state.game_state['player_hits_left'] == 0 else 'You Won!')
